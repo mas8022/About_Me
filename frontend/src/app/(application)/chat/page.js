@@ -79,7 +79,7 @@ export default function ChatListPage() {
               <Loader2 className="w-6 h-6 animate-spin" />
               <span className="ml-2 text-sm">در حال بارگذاری...</span>
             </div>
-          ) : !!data?.data ? (
+          ) : data?.data.length ? (
             <div>
               <h3 className="text-sm text-muted-foreground mb-2">
                 گفتگوهای فعال

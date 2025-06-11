@@ -98,8 +98,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           contactPhone: receiverPhone,
         },
       });
-    } catch (error) {
-    }
+    } catch (error) {}
 
     const messages = await this.prismaService.message.findMany({
       where: {
@@ -115,5 +114,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const room2 = `${receiverPhone}-${senderPhone}`;
 
     this.server.to(room1).to(room2).emit('get-messages', messages);
+  }
+
+  @SubscribeMessage('delete-message')
+  async deleteMessage(client: Socket, { id }: { id: number }) {
+    const sender = this.users.get(client.id);
+
+    await this.prismaService.message.delete({
+      where: {
+        id,
+        sender: sender.phone,
+      },
+    });
   }
 }

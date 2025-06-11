@@ -11,8 +11,8 @@ import {
   SiNestjs,
   SiSocketdotio,
   SiRedis,
-  SiMongoose,
   SiPrisma,
+  SiMongodb,
 } from "react-icons/si";
 
 const skillItems = [
@@ -31,8 +31,7 @@ const skillItems = [
     name: "Socket.io",
     icon: <SiSocketdotio className="text-gray-700 dark:text-white" />,
   },
-  { name: "Redis", icon: <SiRedis className="text-red-500" /> },
-  { name: "Mongoose", icon: <SiMongoose className="text-red-700" /> },
+  { name: "MongoDB", icon: <SiMongodb className="text-emerald-700" /> },
   { name: "Prisma", icon: <SiPrisma className="text-black dark:text-white" /> },
 ];
 
@@ -94,7 +93,7 @@ export default function HomePage() {
         <h2 className="font-bold mb-4 text-lg md:text-xl">🧾 درباره من</h2>
         <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
           من یک توسعه‌دهنده فول‌استک با حدود ۳ سال تجربه در توسعه وب هستم.
-          تمرکزم روی ساخت اپلیکیشن‌های مقیاس‌پذیر با استفاده از ابزارهای مدرن
+          تمرکزم روی ساخت اپلیکیشن‌ها با استفاده از ابزارهای مدرن
           مانند Next.js، Nest.js و Socket.io است. به کدنویسی تمیز و طراحی تجربه
           کاربری اهمیت زیادی می‌دهم و علاقه‌مند به یادگیری تکنولوژی‌های جدید
           هستم.
