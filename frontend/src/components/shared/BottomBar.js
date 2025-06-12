@@ -17,11 +17,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import Fetch from "@/utils/axios";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function BottomBar() {
-  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
 
@@ -30,7 +28,8 @@ export default function BottomBar() {
       status > 201 ? toast.error(message) : toast.success(message);
     });
     setOpen(false);
-    router.replace("/auth");
+
+    location.pathname = "/auth";
   };
 
   return (
@@ -48,7 +47,7 @@ export default function BottomBar() {
               <Moon className="h-5 w-5" />
             )}
           </Button>
-          
+
           <Link href={"/"}>
             <Button variant="ghost" size="icon">
               <Home className="h-5 w-5" />
