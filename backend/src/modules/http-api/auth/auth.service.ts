@@ -104,42 +104,49 @@ export class AuthService {
   }
 
   async refreshToken(rawCookies: string) {
-    const { access_token, session_id } = parse(rawCookies || '');
-
     try {
-      this.jwtService.verifyAccessToken(access_token);
-      return { status: 200, message: 'توکن معتبر است' };
-    } catch {}
+      const { access_token, session_id } = parse(rawCookies || '');
 
-    if (!session_id) {
-      return { status: 403, message: 'لطفاً وارد حساب شوید' };
-    }
+      try {
+        this.jwtService.verifyAccessToken(access_token);
+        return { status: 200, message: 'توکن معتبر است' };
+      } catch {}
 
-    const rawRefresh = await this.redisService.get(
-      `refresh_token:${session_id}`,
-    );
+      if (!session_id) {
+        return { status: 403, message: 'لطفاً وارد حساب شوید' };
+      }
 
-    if (!rawRefresh) {
-      return { status: 403, message: 'لطفاً وارد حساب شوید' };
-    }
+      const rawRefresh = await this.redisService.get(
+        `refresh_token:${session_id}`,
+      );
 
-    try {
-      const refreshPayload = this.jwtService.verifyRefreshToken(rawRefresh);
+      if (!rawRefresh) {
+        return { status: 403, message: 'لطفاً وارد حساب شوید' };
+      }
 
-      const newAccessToken = this.jwtService.signAccessToken({
-        id: refreshPayload.id,
-        role: refreshPayload.role,
-      });
+      try {
+        const refreshPayload = this.jwtService.verifyRefreshToken(rawRefresh);
 
+        const newAccessToken = this.jwtService.signAccessToken({
+          id: refreshPayload.id,
+          role: refreshPayload.role,
+        });
+
+        return {
+          status: 200,
+          message: 'توکن جدید با موفقیت ایجاد شد',
+          newAccessToken,
+        };
+      } catch {
+        return {
+          status: 403,
+          message: 'توکن نامعتبر است. لطفاً دوباره وارد شوید',
+        };
+      }
+    } catch (error) {
       return {
-        status: 200,
-        message: 'توکن جدید با موفقیت ایجاد شد',
-        newAccessToken,
-      };
-    } catch {
-      return {
-        status: 403,
-        message: 'توکن نامعتبر است. لطفاً دوباره وارد شوید',
+        status: 500,
+        message: 'اینترنت خود را بررسی کنید',
       };
     }
   }

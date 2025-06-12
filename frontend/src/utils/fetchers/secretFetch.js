@@ -14,7 +14,7 @@ const refreshInstance = axios.create({
 secretFetch.interceptors.request.use(
   async (config) => {
     try {
-      const { data } = await refreshInstance.patch("/auth");
+      const { data } = await refreshInstance.get("/auth/refresh");
 
       if (data.status > 201) {
         toast.error(data.message || "توکن معتبر نیست");

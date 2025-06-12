@@ -10,11 +10,9 @@ import {
 } from "@/components/ui/input-otp";
 import Fetch from "@/utils/axios";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import { PropagateLoader } from "react-spinners";
 
 export default function LoginForm() {
-  const router = useRouter();
   const [step, setStep] = useState("phone");
   const [phone, setPhone] = useState("");
   const [timeLeft, setTimeLeft] = useState(120);
@@ -67,7 +65,6 @@ export default function LoginForm() {
 
     try {
       if (step === "phone") {
-
         if (!phoneRegex.test(data.phone)) {
           toast.error("شماره تلفن معتبر نیست");
           return;
@@ -79,7 +76,6 @@ export default function LoginForm() {
           phone: data.phone,
         });
 
-
         if (status > 201) {
           toast.error(message);
           return;
@@ -89,7 +85,6 @@ export default function LoginForm() {
         setStep("otp");
         setTimeLeft(120);
         setCanResend(false);
-        
       } else {
         if (!otpRegex.test(data.otp)) {
           toast.error("کد باید ۵ رقم باشد");
@@ -106,8 +101,7 @@ export default function LoginForm() {
           return;
         }
 
-        toast.success(message);
-        router.replace("/");
+        location.pathname = "/";
       }
     } catch (error) {
       toast.error("خطایی رخ داد، دوباره تلاش کنید.");
@@ -183,7 +177,6 @@ export default function LoginForm() {
               <InputOTPGroup dir="ltr" className="justify-center">
                 {[...Array(5)].map((_, i) => (
                   <InputOTPSlot
-                    
                     key={i}
                     index={i}
                     ref={i === 0 ? otpInputRef : null}

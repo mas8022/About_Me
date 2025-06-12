@@ -2,9 +2,8 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Headers,
-  Param,
-  Patch,
   Post,
   Res,
 } from '@nestjs/common';
@@ -18,10 +17,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('verify-otp')
-  async verifyOtp(
-    @Body() body: VerifyOtpCodeDto,
-    @Res() res: FastifyReply,
-  ) {
+  async verifyOtp(@Body() body: VerifyOtpCodeDto, @Res() res: FastifyReply) {
     const { message, status, accessToken, sessionId } =
       await this.authService.verifyOtp(body);
     res.setCookie('access_token', accessToken, {
@@ -47,25 +43,31 @@ export class AuthController {
     return res.send(result);
   }
 
-  @Patch()
+  @Get('refresh')
   async refreshToken(
     @Headers('cookie') rawCookies: string,
     @Res() res: FastifyReply,
   ) {
-    const { status, message, newAccessToken } =
-      await this.authService.refreshToken(rawCookies);
+    try {
+      const { status, message, newAccessToken } =
+        await this.authService.refreshToken(rawCookies);
 
-    if (newAccessToken) {
-      res.setCookie('access_token', newAccessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 60 * 15,
-        path: '/',
-      });
+      if (newAccessToken) {
+        res.setCookie('access_token', newAccessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 60 * 15,
+          path: '/',
+        });
+      }
+      return res.send({ status, message });
+    } catch (error) {
+      return {
+        status: 500,
+        message: 'اینترنت خود را بررسی کنید',
+      };
     }
-
-    return res.status(status).send({ message });
   }
 
   @Delete()
